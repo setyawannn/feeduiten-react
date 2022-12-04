@@ -1,5 +1,7 @@
 import './App.css';
 import React from 'react';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 class App extends React.Component {
   constructor() {
@@ -39,7 +41,7 @@ class App extends React.Component {
               <h1 className='fw-bold'>FEEDUITEN APPS</h1>
               <hr className='w-75 mx-auto' />
               <h2 className='fw-bold'>Rp {this.state.sisaUang},-</h2>
-              <span className='title-md'>Sisa uang kamu tersisa 75% lagi</span>
+              <span className='title-md'>Sisa uang kamu tersisa {this.state.persentasiUang}% lagi</span>
             </div>
           </div>
 
@@ -47,7 +49,7 @@ class App extends React.Component {
             <div className='col-6'>
               <div className='card-wrapper p-4'>
                 <div className='icon-wrapper mb-1'>
-                  <i class="bi bi-wallet2"></i>
+                  <i className="bi bi-wallet2"></i>
                 </div>
                 <span className='title-sm'>Pemasukan</span>
                 <h3 className='fw-bold'>Rp {this.state.pemasukanUang},-</h3>
@@ -59,7 +61,7 @@ class App extends React.Component {
             <div className='col-6'>
               <div className='card-wrapper p-4'>
                 <div className='icon-wrapper mb-1'>
-                  <i class="bi bi-cash-stack"></i>
+                  <i className="bi bi-cash-stack"></i>
                 </div>
                 <span className='title-sm'>Pengeluaran</span>
                 <h3 className='fw-bold'>Rp {this.state.pengeluaranUang},-</h3>
@@ -74,19 +76,19 @@ class App extends React.Component {
             <div className='col-12 d-flex justify-content-between align-items-center'>
               <h4>Ringkasan Transaksi</h4>
               <div className='button-wrapper d-flex'>
-                <button className='button btn-ungu px-3 py-2 me-2'>Pemasukan <i class="bi bi-plus-circle-fill"></i></button>
-                <button className='button btn-pink px-3 py-2'>Pengeluaran <i class="bi bi-dash-circle-fill"></i></button>
+                <ModalCreate variant="button btn-ungu px-3 py-2 me-2" text="Pemasukan" icon="bi bi-plus-circle-fill" modalHeading="Tambahkan Pemasukan" />
+                <ModalCreate variant="button btn-pink px-3 py-2" text="Pengeluaran" icon="bi bi-dash-circle-fill" modalHeading="Tambahkan Pengeluaran" />
               </div>
             </div>
           </div>
 
           <div className='row mt-4'>
-            {this.state.summary.map((sum) => {
+            {this.state.summary.map((sum, index) => {
               return (
-                <div className='col-12 mb-3 d-flex justify-content-between align-items-center'>
+                <div key={index} className='col-12 mb-3 d-flex justify-content-between align-items-center'>
                   <div className='d-flex align-items-center'>
                     <div className={sum.kategori === 'IN' ? 'icon-wrapper-in' : 'icon-wrapper-out'}>
-                      <i class={sum.kategori === 'IN' ? 'bi bi-wallet2' : 'bi bi-bag-dash'}></i>
+                      <i className={sum.kategori === 'IN' ? 'bi bi-wallet2' : 'bi bi-bag-dash'}></i>
                     </div>
                     <div className='transaction ms-3 d-flex flex-column'>
                       <h6>{sum.deskripsi}</h6>
@@ -101,6 +103,55 @@ class App extends React.Component {
 
           </div>
         </div>
+      </>
+    )
+  }
+}
+
+class ModalCreate extends React.Component {
+
+  constructor() {
+    super();
+    this.state = {
+      show: false,
+    }
+
+    this.handleClose = this.handleClose.bind(this);
+    this.handleShow = this.handleShow.bind(this);
+
+  }
+
+  handleClose() {
+    this.setState({
+      show: false,
+    })
+  }
+
+  handleShow() {
+    this.setState({
+      show: true,
+    })
+  }
+
+  render() {
+    return (
+      <>
+        <button
+          onClick={this.handleShow}
+          className={this.props.variant}>{this.props.text}<i className={this.props.icon}></i>
+        </button>
+
+        <Modal show={this.state.show} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>{this.props.modalHeading}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={this.handleClose}>
+              Save
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </>
     )
   }
